@@ -30,6 +30,7 @@ public class PlanetFedoraViewer extends DroidGap
     {
         super.onCreate(savedInstanceState);
         super.loadUrl("file:///android_asset/www/index.html");
+        super.setIntegerProperty("loadUrlTimeoutValue", 60000); 
     }
 }
 

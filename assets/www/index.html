@@ -9,21 +9,53 @@
 </head> 
 <body> 
 
-<div data-role="page">
+<div data-role="page" id = "Homepage">
 
-    <div data-role="header" data-theme="b">
-        <h1>Planet Fedora</h1>
-    </div><!-- /header -->
+    <div data-role="header" data-theme="b" data-tap-toggle="false" height:"50px;">
+        <h1 style = "font-size: 23px;">Planet Fedora</h1>
+    </div>
 
     <div data-role="content">   
-        <ul data-role="listview" data-inset="true" data-filter="true">
+        <ul id = "list" data-role="listview" data-inset="true" data-filter="false" data-theme="d">
 
         </ul> 
     </div>
 
 </div>
+
+<div data-role="page" id="DisplayPage">
+    <div data-role="header" data-theme="b" data-tap-toggle="false" height:"50px;">
+        <a href="#mainPage" data-rel="back">Back</a>
+        <h1 style = "font-size: 23px;" id = "titleText"></h1>
+    </div>
+
+    <div data-role="content" id = "article">
+    </div>
+</div>
 <script type = "text/javascript">
-    var feed = "http://planet.fedoraproject.org/rss20.xml";
+    $(document).ready(function() {
+        var feed = "http://planet.fedoraproject.org/rss20.xml";
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET",feed,false);
+        xmlhttp.send();
+        xmlDoc = xmlhttp.responseXML;
+        items = xmlDoc.getElementsByTagName("item");
+        var list = "";
+        for (i = 0; i < items.length; i++) {
+                var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+                list += '<li class="contentLink" style = "height: 80px"; text-align:center;><a href="#DisplayPage" class="contentLink" style = "font-size: 20px; text-decoration: none; color: black;" data-entryid="'+i+'">' + title + '<br></br></a></li>';
+            }
+        $("#list").append(list);
+        $("#list").listview("refresh");
+        $(".contentLink").live("click", function() {
+            selectedEntry = $(this).data("entryid");
+            document.getElementById("titleText").innerHTML = items[selectedEntry].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+            content = items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+            $("#article").append(content);
+        });
+    });
+
+
 </script>
 </body>
 </html>
