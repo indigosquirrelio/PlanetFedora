@@ -52,13 +52,17 @@
         items = xmlDoc.getElementsByTagName("item"); //Get each item individually
         var list = "";
         for (i = 0; i < items.length; i++) { 
-                var des = (items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue)
+                var des = (items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue);
                 var index = des.indexOf(": ");
                 var splits = [des.slice(0,index), des.slice(index+2)]; //Seperate the author from the title
-                var author = splits[0]
-                var title = splits[1] 
-                var date = (items[i].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue).split(" +0000")[0]
-                list += '<li class="contentLink" style = "height: 140px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal;" data-entryid="'+i+'">' + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
+                var author = splits[0];
+                var title = splits[1];
+                var date = (items[i].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue).split(" +0000")[0];
+                var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+                var i1 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf("<img");
+                var i2 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf(';">');
+                var img = description.slice(i1,i2)+';">';
+                list += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
             }
 
         $("#list").append(list);
