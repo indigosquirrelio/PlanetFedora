@@ -69,6 +69,13 @@
             </ul>
         </div>
     </div>
+    <div data-role="content" data-theme="b">
+        <h1>About</h1>
+        <p><a href = "http://planet.fedoraproject.org">Fedora Planet</a> is a website that displays blog posts from various Fedora contributors. While these blog posts don't necessarily reflect the opinions of the <a href = "http://fedoraproject.org">Fedora Project</a>, they do express the viewpoints of the individuals contributing to Fedora Planet. This application for Android devices was written to make it faster and easier to view the contents of Fedora Planet. In order to do this, it uses the project's <a href = "http://planet.fedoraproject.org/rss20.xml">RSS feed</a>.<br><br>If you would like to read more about how to use this application, visit our <a href = "https://github.com/areke/PlanetFedora/wiki">wiki page</a>.</p>
+        <h1>Contribute</h1>
+        <p>Please contribute if you know a way to make this better. File an <a href = "https://github.com/areke/PlanetFedora/issues">issue</a> if you have any problems or suggestions. You can also fork this repository and open a pull request with your changes.</p>
+
+    </div>
 </div>
 
 <div data-role="page" id="Favorites">
@@ -244,7 +251,15 @@
                 }
                 window.location = "#DisplayPage"; //View the content
             });
-
+            $("#About").bind("pagebeforeshow", function(prepage) {
+                $("a").click(function(event) {
+                    event.preventDefault(); //Stop links from opening
+                    href = this.href; //Get link from the link that was clicked
+                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                        window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
+                    }
+                });
+            });
             $("#DisplayPage").bind("pagebeforeshow", function(prepage) {
                 $("#article").empty();
                 var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
