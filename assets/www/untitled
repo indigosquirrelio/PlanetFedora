@@ -44,14 +44,14 @@
     </div>
 
     <div data-role="popup" id="addFavorite" data-overlay-theme="b" style = "text-align:center;">
-        <p id = "disMes" style = "font-size: 24px;"><br><strong></strong><br><br></p>
+        <p style = "font-size: 24px;"><br><strong>Successfully added to favorites.<strong><br><br><p>
     </div>
 
     <div data-role="footer" data-theme="b" data-position="fixed" style = "text-align:center; height: 50px;">
         <div data-role="navbar">
             <ul id = "navigation">
                 <li><a href="#mainPage" data-rel="back" id = "back" data-transition="slide">Back</a></li>
-                <li><a href="#addFavorite" id = "add" data-transition="pop" data-rel = "popup" data-position-to="window"></a></li>
+                <li><a href="#addFavorite" id = "add" data-transition="pop" data-rel = "popup" data-position-to="window">Favorite</a></li>
                 <li><a href="#share" id = "share" data-transition="slide">Share</a></li>
             </ul>
         </div>
@@ -86,7 +86,6 @@
         <ul id = "list2" data-role="listview" data-icon="arrow-r" data-inset="true" data-filter="false" data-theme="d" style="white-space: normal">
 
         </ul> 
-        <h1 id = "yourFavorites" style = "margin-left:auto; margin-right:auto; text-align:center;"></h1>
     </div>
 </div>
 
@@ -127,23 +126,12 @@
         });
 
         $("#DisplayPage").bind("pagebeforeshow", function(prepage) {
-            var storage = window.localStorage;
             var des = (items[selectedEntry].getElementsByTagName("title")[0].childNodes[0].nodeValue); //get title name
             var index = des.indexOf(": "); //Split 
             var splits = [des.slice(0,index), des.slice(index+2)];
-            var title = splits[1];
-            var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
+            var title = splits[1]
             document.getElementById("titleText").innerHTML = title; //Set title
-            content = items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue;
-            if (storage.getItem(title+key))
-            {
-                $("#add .ui-btn-text").text("Unfavorite");
-            }
-            else
-            {
-                $("#add .ui-btn-text").text("Favorite");
-            }
-
+            content = items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue; //  
             $("#article").append(content); //Preload content
 
             $("a").click(function(event) {
@@ -161,133 +149,46 @@
                     function() {alert('Share failed')} // Failure function
                 );
             });
-            $("#add").unbind("click").click(function() {
+            $("#add").click(function() {
+                alert("hi");
                 var storage = window.localStorage;
-                var localStorage = window.localStorage;
                 var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
-                var des = (items[selectedEntry].getElementsByTagName("title")[0].childNodes[0].nodeValue);
-                var index = des.indexOf(": ");
-                var splits = [des.slice(0,index), des.slice(index+2)]; //Seperate the author from the title
-                var author = splits[0];
-                var title = splits[1];
-                var date = (items[selectedEntry].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue).split(" +0000")[0];
-                var description = items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue;
-                var i1 = (items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf("<img");
-                var i2 = (items[selectedEntry].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf(';">');
-                var img = description.slice(i1,i2)+';">';
-                if (storage.getItem(title+key))
-                {
-                    storage.removeItem(title+"title");
-                    storage.removeItem(title+"author");
-                    storage.removeItem(title+"date");
-                    storage.removeItem(title+"description");
-                    storage.removeItem(title+"image");
-                    storage.removeItem(title+key);
-                    document.getElementById("disMes").innerHTML = "Successfully removed from favorites.";
-                    $("#add .ui-btn-text").text("Favorite");
-
-                }
-                else 
-                {
-                    storage.setItem((title+"title"), title);
-                    storage.setItem((title+"author"), author);
-                    storage.setItem((title+"date"), date);
-                    storage.setItem((title+"description"), description);
-                    storage.setItem((title+"image"), img);
-                    storage.setItem((title+key), title);
-                    document.getElementById("disMes").innerHTML = "Successfully added to favorites.";
-                    $("#add .ui-btn-text").text("Unfavorite");
-                }
+                var value = items[selectedEntry];
+                alert(value);
+                storage.setItem((key+selectedEntry), value);
 
             });
         });
-        $("#Favorites").bind("pagebeforeshow", function() {
-            $("#list2").empty();
-            var storage = window.localStorage;
-            var localStorage = window.localStorage;
+        $("#Favorites").bind("pageinit", function() {
             var localStorageKeys = Object.keys(localStorage);
-            var list2 = "";
             var localStorageValues = [];
             for (var i = 0; i<=localStorageKeys.length-1; i++)
             {
               if (localStorageKeys[i].indexOf("cm4io2318ew0iodsjfa08p1o2j3mrdfsc") != -1)
                 {
-                localStorageValues[localStorageValues.length] = window.localStorage.getItem(localStorageKeys[i]);
+                localStorageValue = window.localStorage.getItem(localStorageKeys[i]);
+                var des = (localStorageValue.getElementsByTagName("title")[0].childNodes[0].nodeValue);
+                var index = des.indexOf(": ");
+                var splits = [des.slice(0,index), des.slice(index+2)]; //Seperate the author from the title
+                var author = splits[0];
+                var title = splits[1];
+                var date = (localStorageValue.getElementsByTagName("pubDate")[0].childNodes[0].nodeValue).split(" +0000")[0];
+                var description = localStorageValue.getElementsByTagName("description")[0].childNodes[0].nodeValue;
+                var i1 = (localStorageValue.getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf("<img");
+                var i2 = (localStorageValue.getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf(';">');
+                var img = description.slice(i1,i2)+';">';
+                list += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="favContentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
                 }
             }
-            for (var i = 0; i<=localStorageValues.length-1; i++) {
-                var name = localStorageValues[i];
-                var title = storage.getItem(name+"title");
-                var author = storage.getItem(name+"author");
-                var date = storage.getItem(name+"date");
-                var description = storage.getItem(name+"description");
-                var img = storage.getItem(name+"image");
-                list2 += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
+            $("#list").append(list);
+            $("#list").listview("refresh");
+            $(".favContentLink").bind("click", function() { //Capture link click
+                $("#favoriteContent").empty();
+                favSelected = $(this).data("entryid");
+                if (typeof favSelected !== "undefined") { //Check if everything is okay
+                    favSelectedEntry = favSelected;
                 }
-            $("#list2").append(list2);
-            $("#list2").listview("refresh");
-            if (localStorageValues.length == 0)
-            {
-                $("#yourFavorites").text("No favorites to show");
-            }
-            else
-            {
-                $("#yourFavorites").text("");
-            }
-
-
-            $(".contentLink").bind("click", function() { //Capture link click
-                $("#article").empty();
-                selected = $(this).data("entryid");
-                if (typeof selected !== "undefined") { //Check if everything is okay
-                    selectedEntry = selected;
-                }
-                window.location = "#DisplayPage"; //View the content
-            });
-
-            $("#DisplayPage").bind("pagebeforeshow", function(prepage) {
-                $("#article").empty();
-                var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
-                var name = localStorageValues[selectedEntry];
-                var title = storage.getItem(name+"title");
-                var description = storage.getItem(name+"description");
-                document.getElementById("titleText").innerHTML = title; //Set title
-                content = description;
-                $("#add .ui-btn-text").text("Unfavorite");
-                $("#article").append(content); //Preload content
-
-                $("a").click(function(event) {
-                    event.preventDefault(); //Stop links from opening
-                    href = this.href; //Get link from the link that was clicked
-                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
-                        window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
-                    }
-                });
-                $("#share").unbind("click").click(function() {
-                    window.plugins.share.show({ //Let the user able to share the article easily
-                        subject: 'Article on Fedora Planet',
-                        text: 'Here is a cool article I found on Fedora Planet:\n'   + items[selectedEntry].getElementsByTagName("link")[0].childNodes[0].nodeValue},
-                        function() {}, // Success function
-                        function() {alert('Share failed')} // Failure function
-                    );
-                });
-                $("#add").unbind("click").click(function() {
-                    var storage = window.localStorage;
-                    var localStorage = window.localStorage;
-                    var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
-                    if (storage.getItem(title+key))
-                    {
-                        storage.removeItem(title+"title");
-                        storage.removeItem(title+"author");
-                        storage.removeItem(title+"date");
-                        storage.removeItem(title+"description");
-                        storage.removeItem(title+"image");
-                        storage.removeItem(title+key);
-                        document.getElementById("disMes").innerHTML = "Successfully removed from favorites.";
-
-                    }
-
-                });
+                window.location = "#DisplayFavPage"; //View the content
             });
         });
         function onDeviceReady() {
