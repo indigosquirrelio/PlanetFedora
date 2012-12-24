@@ -74,7 +74,7 @@
         <div data-role="navbar">
             <ul id = "navigation2">
                 <li><a href="#mainPage" data-rel="back" id = "back2" data-transition="slide">Back</a></li>
-                <li><a href="#addFavorite" id = "add2" data-transition="pop" data-rel = "popup" data-position-to="window"></a></li>
+                <li><a href="#addFavorite2" id = "add2" data-transition="pop" data-rel = "popup" data-position-to="window"></a></li>
                 <li><a href="#share" id = "share2" data-transition="slide">Share</a></li>
             </ul>
         </div>
@@ -179,7 +179,7 @@
             $("a").click(function(event) {
                 event.preventDefault(); //Stop links from opening
                 href = this.href; //Get link from the link that was clicked
-                if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
                     window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                 }
             });
@@ -278,7 +278,7 @@
                 $("a").click(function(event) {
                     event.preventDefault(); //Stop links from opening
                     href = this.href; //Get link from the link that was clicked
-                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
                         window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                     }
                 });
@@ -297,7 +297,7 @@
                 $("a").click(function(event) {
                     event.preventDefault(); //Stop links from opening
                     href = this.href; //Get link from the link that was clicked
-                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
                         window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                     }
                 });
@@ -321,7 +321,7 @@
                         storage.removeItem(title+"description");
                         storage.removeItem(title+"image");
                         storage.removeItem(title+key);
-                        document.getElementById("disMes").innerHTML = "Successfully removed from favorites.";
+                        document.getElementById("disMes2").innerHTML = "Successfully removed from favorites.";
 
                     }
 
