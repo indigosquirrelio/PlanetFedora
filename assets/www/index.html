@@ -58,6 +58,29 @@
     </div>
 </div>
 
+<div data-role="page" id="DisplayPage2">
+    <div data-role="header" data-theme="b" style = "white-space: normal;">
+        <h1 style = "font-size: 23px; white-space: normal; margin-left: auto; margin-right: auto; width: 300px;" id = "titleText2"></h1>
+    </div>
+
+    <div data-role="content" id = "article2" style = "overflow: auto;">
+    </div>
+
+    <div data-role="popup" id="addFavorite2" data-overlay-theme="b" style = "text-align:center;">
+        <p id = "disMes2" style = "font-size: 24px;"><br><strong></strong><br><br></p>
+    </div>
+
+    <div data-role="footer" data-theme="b" data-position="fixed" style = "text-align:center; height: 50px;">
+        <div data-role="navbar">
+            <ul id = "navigation2">
+                <li><a href="#mainPage" data-rel="back" id = "back2" data-transition="slide">Back</a></li>
+                <li><a href="#addFavorite" id = "add2" data-transition="pop" data-rel = "popup" data-position-to="window"></a></li>
+                <li><a href="#share" id = "share2" data-transition="slide">Share</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div data-role="page" id="About">
     <div data-role="header" data-theme="b" data-tap-toggle="false" height:"50px;">
         <h1 style = "font-size: 23px; white-space: normal;">Planet Fedora</h1>
@@ -229,7 +252,7 @@
                 var date = storage.getItem(name+"date");
                 var description = storage.getItem(name+"description");
                 var img = storage.getItem(name+"image");
-                list2 += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
+                list2 += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink2" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
                 }
             $("#list2").append(list2);
             $("#list2").listview("refresh");
@@ -243,13 +266,13 @@
             }
 
 
-            $(".contentLink").bind("click", function() { //Capture link click
+            $(".contentLink2").bind("click", function() { //Capture link click
                 $("#article").empty();
                 selected = $(this).data("entryid");
                 if (typeof selected !== "undefined") { //Check if everything is okay
                     selectedEntry = selected;
                 }
-                window.location = "#DisplayPage"; //View the content
+                window.location = "#DisplayPage2"; //View the content
             });
             $("#About").bind("pagebeforeshow", function(prepage) {
                 $("a").click(function(event) {
@@ -260,16 +283,16 @@
                     }
                 });
             });
-            $("#DisplayPage").bind("pagebeforeshow", function(prepage) {
-                $("#article").empty();
+            $("#DisplayPage2").bind("pagebeforeshow", function(prepage) {
+                $("#article2").empty();
                 var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
                 var name = localStorageValues[selectedEntry];
                 var title = storage.getItem(name+"title");
                 var description = storage.getItem(name+"description");
-                document.getElementById("titleText").innerHTML = title; //Set title
+                document.getElementById("titleText2").innerHTML = title; //Set title
                 content = description;
-                $("#add .ui-btn-text").text("Unfavorite");
-                $("#article").append(content); //Preload content
+                $("#add2 .ui-btn-text").text("Unfavorite");
+                $("#article2").append(content); //Preload content
 
                 $("a").click(function(event) {
                     event.preventDefault(); //Stop links from opening
@@ -278,7 +301,7 @@
                         window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                     }
                 });
-                $("#share").unbind("click").click(function() {
+                $("#share2").unbind("click").click(function() {
                     window.plugins.share.show({ //Let the user able to share the article easily
                         subject: 'Article on Fedora Planet',
                         text: 'Here is a cool article I found on Fedora Planet:\n'   + items[selectedEntry].getElementsByTagName("link")[0].childNodes[0].nodeValue},
@@ -286,7 +309,7 @@
                         function() {alert('Share failed')} // Failure function
                     );
                 });
-                $("#add").unbind("click").click(function() {
+                $("#add2").unbind("click").click(function() {
                     var storage = window.localStorage;
                     var localStorage = window.localStorage;
                     var key = "cm4io2318ew0iodsjfa08p1o2j3mrdfsc";
