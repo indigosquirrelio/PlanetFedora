@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-    <title>My Page</title> 
+    <title>Planet Fedora</title> 
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
     <link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
     <link rel="stylesheet" href="css/index.css" />
@@ -31,6 +31,14 @@
         <ul id = "list" data-role="listview" data-icon="arrow-r" data-inset="true" data-filter="false" data-theme="d" style="white-space: normal">
 
         </ul> 
+    </div>
+
+    <div data-role="footer" data-theme="b" data-position="fixed" style = "text-align:center; height: 50px;">
+        <div data-role="navbar">
+            <ul id = "navigation1">
+                <li><a href="#refresh" id = "refresh">Check For Updates</a></li>
+            </ul>
+        </div>
     </div>
 
 </div>
@@ -125,38 +133,95 @@
 
 <script type = "text/javascript">
     $(document).ready(function() {
-        document.addEventListener("deviceready", onDeviceReady, false);
         var selectedEntry = "";
-        var feed = "http://planet.fedoraproject.org/rss20.xml";
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET",feed,false); 
-        xmlhttp.send();
-        xmlDoc = xmlhttp.responseXML; //Get the xml
-        items = xmlDoc.getElementsByTagName("item"); //Get each item individually
-        var list = "";
-        for (i = 0; i < items.length; i++) { 
-                var des = (items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue);
-                var index = des.indexOf(": ");
-                var splits = [des.slice(0,index), des.slice(index+2)]; //Seperate the author from the title
-                var author = splits[0];
-                var title = splits[1];
-                var date = (items[i].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue).split(" +0000")[0];
-                var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
-                var i1 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf("<img");
-                var i2 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf(';">');
-                var img = description.slice(i1,i2)+';">';
-                list += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
-            }
+        function refresh() {
+            document.addEventListener("deviceready", onDeviceReady, false);
+            var feed = "http://planet.fedoraproject.org/rss20.xml";
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET",feed,false); 
+            xmlhttp.send();
+            xmlDoc = xmlhttp.responseXML; //Get the xml
+            items = xmlDoc.getElementsByTagName("item"); //Get each item individually
+            var list = "";
+            for (i = 0; i < items.length; i++) { 
+                    var des = (items[i].getElementsByTagName("title")[0]);
+                        if ((typeof des === "undefined")) {
+                            des = "No Title"
+                        }
+                        else
+                        {
+                            des = des.childNodes[0];
+                            if ((typeof des === "undefined")) {
+                                alert(des);
+                                des = "No Author: No Title";
+                            }
+                            else {
+                                des = des.nodeValue;
+                            }
 
-        $("#list").append(list);
-        $("#list").listview("refresh");
-        $(".contentLink").bind("click", function() { //Capture link click
-            $("#article").empty();
-            selected = $(this).data("entryid");
-            if (typeof selected !== "undefined") { //Check if everything is okay
-                selectedEntry = selected;
-            }
-            window.location = "#DisplayPage"; //View the content
+                        }
+                    var index = des.indexOf(": ");
+                    var splits = [des.slice(0,index), des.slice(index+2)]; //Seperate the author from the title
+                    var author = splits[0];
+                    var title = splits[1];
+                    var date = (items[i].getElementsByTagName("pubDate")[0]);
+                    if ((typeof date === "undefined")) {
+                        date = "No Date"
+                    }
+                    else
+                    {
+                        date = date.childNodes[0];
+                        if ((typeof date === "undefined")) {
+                            date = "No Date";
+                        }
+                        else {
+                            date = date.nodeValue;
+                        }
+
+                    }
+                    var description = items[i].getElementsByTagName("description")[0];
+                    if ((typeof description === "undefined")) {
+                        description = "No Description"
+                    }
+                    else
+                    {
+                        description = description.childNodes[0];
+                        if ((typeof description === "undefined")) {
+                            description = "No Description";
+                        }
+                        else {
+                            description = description.nodeValue;
+                        }
+
+                    }
+                    var i1 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf("<img");
+                    var i2 = (items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue).indexOf(';">');
+                    var img = description.slice(i1,i2)+';">';
+                    list += '<li class="contentLink" style = "height: 160px"; text-align:center;><a href="#" data-transition="slide" class="contentLink" style = "font-size: 16px; text-decoration: none; color: black; white-space: normal; margin-top: 5px;" data-entryid="'+i+'">' + img + title + '<h3>By: ' + author + '</h3><p>' + date + '</p><br></a></li>'; //Create the list
+                }
+            $("#list").append(list);
+            $("#list").listview("refresh");
+            $.mobile.loading('hide');
+            $(".contentLink").bind("click", function() { //Capture link click
+                $("#article").empty();
+                selected = $(this).data("entryid");
+                if (typeof selected !== "undefined") { //Check if everything is okay
+                    selectedEntry = selected;
+                }
+                window.location = "#DisplayPage"; //View the content
+            });
+        }
+
+        refresh();
+
+        $("#refresh").click(function() {
+            $.mobile.loading('show', {
+                theme: "e",
+                text: "\nUpdating...\n",
+                textonly: "true",
+                textVisible: true
+            });
+            setTimeout(function(){refresh()}, 50);
         });
 
         $("#DisplayPage").bind("pagebeforeshow", function(prepage) {
@@ -182,11 +247,11 @@
             $("a").click(function(event) {
                 event.preventDefault(); //Stop links from opening
                 href = this.href; //Get link from the link that was clicked
-                if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                if (href.indexOf("file:///android_asset/www/index.html") == -1) { //Make sure none of these links were clicked
                     window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                 }
             });
-            $("#share").click(function() {
+            $("#share").unbind("click").click(function() {
                 window.plugins.share.show({ //Let the user able to share the article easily
                     subject: 'Article on Fedora Planet',
                     text: 'Here is a cool article I found on Fedora Planet:\n'   + items[selectedEntry].getElementsByTagName("link")[0].childNodes[0].nodeValue},
@@ -281,7 +346,7 @@
                 $("a").click(function(event) {
                     event.preventDefault(); //Stop links from opening
                     href = this.href; //Get link from the link that was clicked
-                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                    if (href.indexOf("file:///android_asset/www/index.html") == -1) { //Make sure none of these links were clicked
                         window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                     }
                 });
@@ -300,7 +365,7 @@
                 $("a").click(function(event) {
                     event.preventDefault(); //Stop links from opening
                     href = this.href; //Get link from the link that was clicked
-                    if ((href != "file:///android_asset/www/index.html#mainPage") && (href != "file:///android_asset/www/index.html#") && (href != "file:///android_asset/www/index.html#share") && (href != "file:///android_asset/www/index.html#Favorites") && (href != "file:///android_asset/www/index.html#About") && (href != "file:///android_asset/www/index.html#addFavorite") && (href != "file:///android_asset/www/index.html#addFavorite")) { //Make sure none of these links were clicked
+                    if (href.indexOf("file:///android_asset/www/index.html") == -1) { //Make sure none of these links were clicked
                         window.plugins.childBrowser.showWebPage(href, { showLocationBar: true }); //Open the link in a childbrowser in order to prevent glitches as well as to make it easier to get back to using the app
                     }
                 });
